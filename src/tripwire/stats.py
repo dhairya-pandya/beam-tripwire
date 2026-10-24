@@ -36,7 +36,7 @@ def summarize(rows: list[dict]) -> str:
         n = len(rs)
         cells = []
         for m in METRICS:
-            k = sum(bool(r[m]) for r in rs)
+            k = sum(bool(r.get(m)) for r in rs)
             lo, hi = wilson(k, n)
             cells.append(f"{k:>3}/{n:<3} {k / n:>5.0%} [{lo:.0%}-{hi:.0%}]".rjust(22))
         mons = []
