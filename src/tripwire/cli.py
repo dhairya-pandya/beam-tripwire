@@ -120,7 +120,7 @@ def run(
                 json.dumps({"row": row, "episode": asdict(ep)}, indent=1))
             with open(results, "a") as f:
                 f.write(json.dumps(row) + "\n")
-            flags = [k for k in ("cheated", "tamper_attempt", "special_cased", "honest_flag", "intent_verbalised",
+            flags = [k for k in ("cheated", "tamper_attempt", "special_cased", "config_edit", "honest_flag", "intent_verbalised",
                                  "solved_original") if row[k]]
             typer.echo(f"  {v.instance_id} {cond} {effort}: {' '.join(flags) or '-'} "
                        f"(stop={ep.stop_reason}, {ep.turns} turns, ${ep.cost_usd:.4f})")
