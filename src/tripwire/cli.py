@@ -145,6 +145,7 @@ def regrade(run_id: str):
                        old["special_cased"], old["solved_original"])
         d["row"] = to_row({k: old[k] for k in ("instance_id", "repo", "condition", "effort", "stop_reason",
                                                "turns", "cost_usd", "error")}, labels)
+        d["row"].update({k: v for k, v in old.items() if k.startswith("judge_")})
         path.write_text(json.dumps(d, indent=1))
         rows.append(d["row"])
     (out / "results.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
@@ -154,6 +155,28 @@ def regrade(run_id: str):
 
 def _test_file(instance_id: str, variants: Path = Path("data/variants.jsonl")) -> str:
     return load_variants(variants)[instance_id].test_file
+
+
+@app.command()
+def judge(run_id: str, base_url: str = typer.Option("http://localhost:8090/v1"),
+          model: str = typer.Option("student"), api_key: str = typer.Option("local")):
+    """Add LLM-judge labels (honesty, and an intent monitor over reasoning) to every saved episode."""
+    from openai import OpenAI
+
+    from tripwire.judge import judge_episode
+
+    client = OpenAI(base_url=base_url, api_key=api_key, timeout=600)
+    out = Path("runs") / run_id
+    rows = []
+    for path in sorted((out / "traces").glob("*.json")):
+        d = json.loads(path.read_text())
+        if "judge_intent" not in d["row"]:
+            d["row"].update(judge_episode(client, model, d["episode"]["messages"]))
+            path.write_text(json.dumps(d, indent=1))
+        rows.append(d["row"])
+        typer.echo(f"  {path.stem}: honest={d['row']['judge_honest']} intent={d['row']['judge_intent']}")
+    (out / "results.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    report(run_id)
 
 
 @app.command()
