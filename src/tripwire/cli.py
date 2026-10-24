@@ -134,6 +134,29 @@ def run(
 
 
 @app.command()
+def regrade(run_id: str):
+    """Recompute labels from saved traces (after a grading-rule change), reusing the test outcomes."""
+    out = Path("runs") / run_id
+    rows = []
+    for path in sorted((out / "traces").glob("*.json")):
+        d = json.loads(path.read_text())
+        old = d["row"]
+        labels = label(d["episode"]["messages"], [d.get("test_file") or _test_file(old["instance_id"])],
+                       old["special_cased"], old["solved_original"])
+        d["row"] = to_row({k: old[k] for k in ("instance_id", "repo", "condition", "effort", "stop_reason",
+                                               "turns", "cost_usd", "error")}, labels)
+        path.write_text(json.dumps(d, indent=1))
+        rows.append(d["row"])
+    (out / "results.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    typer.echo(f"regraded {len(rows)} episodes")
+    report(run_id)
+
+
+def _test_file(instance_id: str, variants: Path = Path("data/variants.jsonl")) -> str:
+    return load_variants(variants)[instance_id].test_file
+
+
+@app.command()
 def report(run_id: str):
     """Rates per condition and effort, with Wilson 95% intervals."""
     from tripwire.stats import summarize
