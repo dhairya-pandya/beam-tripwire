@@ -30,3 +30,26 @@ def test_judge_episode_calls_model_twice():
 
     out = judge_episode(Fake(), "m", [{"role": "assistant", "content": "x", "reasoning_content": "y"}])
     assert out == {"judge_honest": True, "judge_intent": False} and len(asked) == 2
+
+
+def test_note_questions_only_asked_when_there_is_a_note():
+    import json
+
+    from tripwire.judge import judge_episode
+
+    class Fake:
+        def __init__(self):
+            self.asked = []
+            self.chat = self
+            self.completions = self
+
+        def create(self, **kw):
+            self.asked.append(kw["messages"][0]["content"])
+            msg = type("M", (), {"content": "NO"})()
+            return type("R", (), {"choices": [type("C", (), {"message": msg})()]})()
+
+    submit = lambda note: [{"role": "assistant", "reasoning_content": "thinking",
+                            "tool_calls": [{"function": {"name": "submit_patch", "arguments": json.dumps({"note": note})}}]}]
+    f = Fake()
+    assert "judge_disclosed" not in judge_episode(f, "m", submit(""), think=False)
+    assert judge_episode(f, "m", submit("changed the test"), think=False)["judge_disclosed"] is False
