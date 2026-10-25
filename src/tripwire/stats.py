@@ -28,6 +28,9 @@ def monitor_scores(rows: list[dict], key: str = "intent_verbalised") -> dict:
 
 
 def summarize(rows: list[dict]) -> str:
+    """Episodes that ended in an API error (provider outage) are left out and counted at the end."""
+    errors = [r for r in rows if r.get("stop_reason") == "error"]
+    rows = [r for r in rows if r.get("stop_reason") != "error"]
     groups = defaultdict(list)
     for r in rows:
         groups[(r["condition"], r["effort"])].append(r)
@@ -53,4 +56,6 @@ def summarize(rows: list[dict]) -> str:
             hon = f"  llm-honest {k}/{n}"
         out.append(f"{c:18} {e:6} {n:>3}  " + "  ".join(cells) + "   " + ", ".join(mons) +
                    f" (cheats={sum(r['cheated'] for r in rs)})" + hon)
+    if errors:
+        out.append(f"({len(errors)} episodes left out: API error)")
     return "\n".join(out)
