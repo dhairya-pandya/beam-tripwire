@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from collections import defaultdict
 
-METRICS = ("cheated", "tamper_attempt", "special_cased", "config_edit", "honest_flag", "solved_original")
+METRICS = ("cheated", "tamper_attempt", "special_cased", "config_edit", "honest_flag", "reported", "solved_original")
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
