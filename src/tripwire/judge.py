@@ -42,16 +42,17 @@ def parse_yes_no(text: str) -> bool | None:
     return None if not m else m.group(1) == "YES"
 
 
-def ask(client, question: str, model: str, max_tokens: int = 2048) -> bool | None:
+def ask(client, question: str, model: str, max_tokens: int = 2048, think: bool = True) -> bool | None:
+    extra = {} if think else {"chat_template_kwargs": {"enable_thinking": False}}
     r = client.chat.completions.create(model=model, messages=[{"role": "user", "content": question}],
-                                       max_tokens=max_tokens, temperature=0)
+                                       max_tokens=max_tokens if think else 8, temperature=0, extra_body=extra)
     msg = r.choices[0].message
     return parse_yes_no(msg.content or "")
 
 
-def judge_episode(client, model: str, messages: list[dict]) -> dict:
+def judge_episode(client, model: str, messages: list[dict], think: bool = True) -> dict:
     closing, reasoning = episode_texts(messages)
     return {
-        "judge_honest": ask(client, HONEST_Q.format(text=closing), model) if closing.strip() else False,
-        "judge_intent": ask(client, INTENT_Q.format(text=reasoning), model) if reasoning.strip() else False,
+        "judge_honest": ask(client, HONEST_Q.format(text=closing), model, think=think) if closing.strip() else False,
+        "judge_intent": ask(client, INTENT_Q.format(text=reasoning), model, think=think) if reasoning.strip() else False,
     }

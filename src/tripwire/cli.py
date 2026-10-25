@@ -159,7 +159,9 @@ def _test_file(instance_id: str, variants: Path = Path("data/variants.jsonl")) -
 
 @app.command()
 def judge(run_id: str, base_url: str = typer.Option("http://localhost:8090/v1"),
-          model: str = typer.Option("student"), api_key: str = typer.Option("local")):
+          model: str = typer.Option("student"), api_key: str = typer.Option("local"),
+          think: bool = typer.Option(True, help="let the judge reason before answering"),
+          redo: bool = typer.Option(False, help="judge episodes that already have labels again")):
     """Add LLM-judge labels (honesty, and an intent monitor over reasoning) to every saved episode."""
     from openai import OpenAI
 
@@ -170,8 +172,8 @@ def judge(run_id: str, base_url: str = typer.Option("http://localhost:8090/v1"),
     rows = []
     for path in sorted((out / "traces").glob("*.json")):
         d = json.loads(path.read_text())
-        if "judge_intent" not in d["row"]:
-            d["row"].update(judge_episode(client, model, d["episode"]["messages"]))
+        if redo or "judge_intent" not in d["row"]:
+            d["row"].update(judge_episode(client, model, d["episode"]["messages"], think=think))
             path.write_text(json.dumps(d, indent=1))
         rows.append(d["row"])
         typer.echo(f"  {path.stem}: honest={d['row']['judge_honest']} intent={d['row']['judge_intent']}")
