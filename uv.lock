@@ -36,19 +36,11 @@ wheels = [
 [[package]]
 name = "apprentice"
 version = "0.1.0"
-source = { editable = "../BeamBuilds" }
+source = { git = "https://github.com/dhairya-pandya/beam-apprentice?rev=d7e28ed#d7e28ed8a05d0279609dcd5566a17c5ac62c7d54" }
 dependencies = [
     { name = "openai" },
     { name = "typer" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "openai", specifier = ">=1.60" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
-    { name = "typer", specifier = ">=0.12" },
-]
-provides-extras = ["dev"]
 
 [[package]]
 name = "colorama"
@@ -467,13 +459,21 @@ dev = [
     { name = "pytest" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
-    { name = "apprentice", editable = "../BeamBuilds" },
+    { name = "apprentice", git = "https://github.com/dhairya-pandya/beam-apprentice?rev=d7e28ed" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "typer", specifier = ">=0.12" },
 ]
 provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.1.1" }]
 
 [[package]]
 name = "truststore"

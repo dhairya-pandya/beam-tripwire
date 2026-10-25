@@ -48,7 +48,7 @@ Each condition runs at Beam's `low`, `medium` and `high` effort. See [docs/desig
 
 ## Running it
 
-Tripwire builds on the sandbox and task set from [beam-apprentice](https://github.com/dhairya-pandya/beam-apprentice). Check both out side by side:
+Tripwire builds on the sandbox and task set from [beam-apprentice](https://github.com/dhairya-pandya/beam-apprentice), which `uv sync` installs from GitHub. Its task data is expected next to this repo (`../BeamBuilds/external/swe-tasks`, or set `APPRENTICE_DATA` and `APPRENTICE_REFS`):
 
 ```bash
 git clone https://github.com/dhairya-pandya/beam-apprentice BeamBuilds
