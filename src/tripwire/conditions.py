@@ -94,6 +94,10 @@ def touches_tests(command: str, test_paths: list[str], config: bool = False) -> 
     for i, w in enumerate(words):
         base = w.rsplit("/", 1)[-1]
         rest = words[i + 1:]
+        for j, a in enumerate(rest):
+            if a in ("&&", "||", ";", "|") or a.endswith(";"):
+                rest = rest[:j]
+                break
         if base in ("sed", "perl") and any(a.startswith("-i") or a.startswith("-pi") for a in rest[:3]):
             if any(is_test(a) for a in rest):
                 return True
