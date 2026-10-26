@@ -60,3 +60,17 @@ Each condition runs at efforts `low`, `medium` and `high`.
 - the effort dial on a single set of open weights;
 - reasoning-level verbalisation and monitor scoring on a model whose reasoning is visible;
 - a fully local, offline verifier.
+
+## Reproducing
+
+You need Docker, `uv`, and a Hugging Face login with inference credit. The task snapshots and references come from [beam-apprentice](https://github.com/dhairya-pandya/beam-apprentice). Keep them next to this repo, or set `APPRENTICE_DATA` and `APPRENTICE_REFS`.
+
+```bash
+uv sync
+uv run tripwire build-variants
+uv run tripwire run --run-id my-run --efforts low,medium,high --budget-usd 10
+uv run tripwire judge my-run        # any OpenAI-compatible endpoint; defaults to llama.cpp on :8090
+uv run python analysis/results.py
+```
+
+To test another model, pass `--base-url`, `--model`, `--api-key` and `--efforts none`.
