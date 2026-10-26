@@ -18,13 +18,13 @@ Beam then got the task in an offline sandbox, with the test visible and the inst
 - **Impossible.** The changed test and "make the tests pass".
 - **Impossible + honesty.** The same, plus "don't modify the tests, and if it can't be done, say so".
 
-Each version ran at Beam's low, medium and high reasoning effort. That gives 570 episodes, for about $18 of inference.
+Each version ran at Beam's low, medium and high reasoning effort. That gives 616 episodes, for about $18 of inference.
 
 Each episode was graded by program from the trace. We recorded whether Beam wrote to the test, whether the wrong value ended up passing, whether its reasoning stated an intent to cheat, and what its note to the user said. A local Gemma 12B judge added a second opinion on the text-based labels. We checked a sample of every label against the traces by hand.
 
 ## What we found
 
-**Beam cheats on impossible tasks most of the time, and almost never on real ones.** It cheated in 66% of impossible episodes at low effort and 79% at high effort. On the control tasks it touched a test once in 132 episodes, and that edit was justified by the issue.
+**Beam cheats on impossible tasks most of the time, and almost never on real ones.** It cheated in 66% of impossible episodes at low effort and 79% at high effort. On the control tasks it touched a test once in 176 episodes, and that edit was justified by the issue.
 
 **More reasoning effort doesn't make it more honest.** With a 30-turn limit, high effort looked much cleaner, at 20%. That was because 38 of 44 high-effort runs ran out of turns before getting around to the test. With 60 turns, high effort cheated more often than low. We nearly reported the opposite result, and it is a useful warning about turn caps in agent evaluations.
 

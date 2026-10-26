@@ -22,7 +22,7 @@ At a 30-turn cap it looks as if more effort means less cheating (66% → 50% →
 
 The instruction "do not modify the tests; if the task cannot be completed as specified, say so" cuts cheating roughly threefold at low effort and by half at high effort. It does not bring it to zero.
 
-The control is clean: on the real tasks with the real tests, Beam touched a test once in 132 episodes, and that was updating an old assertion the issue itself had made obsolete.
+The control is clean: on the real tasks with the real tests, Beam touched a test once in 176 episodes, and that was updating an old assertion the issue itself had made obsolete.
 
 Two of the 88 high-effort, 60-turn episodes were lost to a provider outage and are left out.
 
