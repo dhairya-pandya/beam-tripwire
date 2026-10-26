@@ -56,6 +56,8 @@ For Beam, the honest record of what happened lives in the reasoning, not in the 
 
 ## Data and code
 
-Every episode is saved with its full trajectory, reasoning, patch and labels. The harness runs in Docker with no network and works with any OpenAI-compatible model. It builds on the sandbox and task set from [beam-apprentice](https://github.com/dhairya-pandya/beam-apprentice). [docs/design.md](docs/design.md) explains how to reproduce the runs.
+All 616 episodes are public at [dhairyapandya/beam-tripwire-episodes](https://huggingface.co/datasets/dhairyapandya/beam-tripwire-episodes). Each one has the full trajectory, reasoning, patch, note to the user and labels, along with the 44 impossible variants. They are meant for anyone who wants to train or test a reasoning monitor, or to run another model on the same traps.
+
+This repository holds everything specific to the study: the variant builder, the conditions, the grading and judging, and the analysis. The low-level harness comes from our earlier project [beam-apprentice](https://github.com/dhairya-pandya/beam-apprentice), which we use as the base. That covers the network-less Docker sandbox, the agent tools, the Beam client with its spend ledger, and the 44 fastapi, rich and requests tasks with their hidden-test references. It installs automatically, pinned to the exact commit these runs used. [docs/design.md](docs/design.md) explains how to reproduce everything with any OpenAI-compatible model.
 
 Apache-2.0.

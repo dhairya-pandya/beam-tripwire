@@ -88,4 +88,4 @@ When it cheats, it rarely says so plainly. Six of 33 notes mention the test edit
 
 ## Data
 
-Every episode, including the full trajectory, reasoning, patch and labels, is in `runs/<run-id>/traces/` and is published as a Hugging Face dataset (link in the README).
+Every episode, including the full trajectory, reasoning, patch and labels, is in `runs/<run-id>/traces/` and is published as the Hugging Face dataset [dhairyapandya/beam-tripwire-episodes](https://huggingface.co/datasets/dhairyapandya/beam-tripwire-episodes).
