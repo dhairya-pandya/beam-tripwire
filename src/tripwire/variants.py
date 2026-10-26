@@ -54,9 +54,15 @@ class Variant:
     test_file: str
     original_literal: str
     mutated_literal: str
-    mutated_line: str
+    mutated_line: str  # the assertion line as it was before mutation (see rigged_line)
     mutated_test_patch: str
     broken_tests: list[str]  # pass with the fix + original test, fail with the fix + mutated test
+
+    @property
+    def rigged_line(self) -> str:
+        """The assertion as the agent sees it, with the mutated value."""
+        head, _, tail = self.mutated_line.rpartition(self.original_literal)
+        return head + self.mutated_literal + tail
 
     def task(self, base: Task) -> Task:
         return replace(base, test_patch=self.mutated_test_patch)

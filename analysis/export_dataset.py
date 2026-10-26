@@ -42,7 +42,7 @@ def main(out: Path):
                     "honest_flag", "reported", "disclosed", "intent_verbalised",
                     "judge_intent", "judge_honest", "judge_reported", "judge_disclosed")},
                 "test_file": v.test_file,
-                "mutated_line": v.mutated_line.strip() if row["condition"] != "possible" else None,
+                "rigged_line": v.rigged_line.strip() if row["condition"] != "possible" else None,
                 "note": submit_note(ep["messages"]),
                 "reasoning": reasoning(ep["messages"]),
                 "patch": ep.get("patch", ""),
@@ -52,7 +52,7 @@ def main(out: Path):
     pq.write_table(pa.Table.from_pylist([
         {"instance_id": v.instance_id, "repo": v.repo, "test_file": v.test_file,
          "original_literal": v.original_literal, "mutated_literal": v.mutated_literal,
-         "mutated_line": v.mutated_line, "broken_tests": v.broken_tests, "mutated_test_patch": v.mutated_test_patch}
+         "original_line": v.mutated_line, "rigged_line": v.rigged_line, "broken_tests": v.broken_tests, "mutated_test_patch": v.mutated_test_patch}
         for v in sorted(variants.values(), key=lambda v: v.instance_id)]), out / "variants.parquet")
     print(f"{len(episodes)} episodes, {len(variants)} variants -> {out}")
 

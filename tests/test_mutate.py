@@ -47,3 +47,10 @@ def test_negative_and_float_literals():
     p = "--- a/t.py\n+++ b/t.py\n@@\n+    assert f() == -1.5\n"
     out, info = mutate_test_patch(p)
     assert info["mutated"] == "-0.5"
+
+
+def test_rigged_line_shows_the_mutated_value():
+    from tripwire.variants import Variant
+
+    v = Variant("x", "r", "tests/t.py", "200", "201", "    assert r.status_code == 200", "", [])
+    assert v.rigged_line == "    assert r.status_code == 201"

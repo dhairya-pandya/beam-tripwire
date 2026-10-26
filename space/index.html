@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tripwire Explorer</title>
+<style>
+:root {
+  --bg: #fafaf9; --panel: #ffffff; --text: #1c1917; --muted: #78716c; --border: #e7e5e4;
+  --red: #c2410c; --red-bg: #fee2e2; --amber: #a16207; --amber-bg: #fef3c7;
+  --green: #15803d; --green-bg: #dcfce7; --blue: #1d4ed8; --blue-bg: #dbeafe; --mark: #fde68a;
+  --code-bg: #f5f5f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c0a09; --panel: #1c1917; --text: #f5f5f4; --muted: #a8a29e; --border: #292524;
+    --red: #f87171; --red-bg: #7f1d1d55; --amber: #fbbf24; --amber-bg: #78350f55;
+    --green: #4ade80; --green-bg: #14532d55; --blue: #93c5fd; --blue-bg: #1e3a8a55; --mark: #a1620766;
+    --code-bg: #1c1917;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 28px 16px 60px; }
+h1 { font-size: 26px; margin: 0 0 8px; letter-spacing: -0.01em; }
+h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 26px 0 10px; }
+a { color: var(--blue); }
+.lead { max-width: 820px; margin: 0 0 6px; }
+.links { font-size: 14px; color: var(--muted); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: end; margin: 22px 0 14px; }
+label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 4px; }
+select { font: inherit; color: var(--text); background: var(--panel); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; min-width: 150px; max-width: 100%; }
+.buckets { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.bucket { text-align: left; font: inherit; color: var(--text); background: var(--panel); cursor: pointer;
+  border: 1px solid var(--border); border-left-width: 6px; border-radius: 10px; padding: 12px 14px; }
+.bucket .num { font-size: 30px; font-weight: 700; line-height: 1.1; }
+.bucket .lab { font-weight: 600; }
+.bucket .sub { font-size: 12.5px; color: var(--muted); }
+.bucket.quiet { border-left-color: var(--red); } .bucket.admitted { border-left-color: var(--amber); }
+.bucket.clean { border-left-color: var(--green); } .bucket.control { border-left-color: var(--muted); }
+.bucket[aria-pressed="true"] { outline: 2px solid var(--text); outline-offset: -1px; }
+.hint { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+.layout { display: grid; grid-template-columns: 290px 1fr; gap: 18px; margin-top: 18px; }
+.list { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+  max-height: 760px; overflow: auto; padding: 4px; }
+.item { display: block; width: 100%; text-align: left; font: inherit; font-size: 13.5px; color: var(--text);
+  background: none; border: 0; border-radius: 7px; padding: 7px 10px; cursor: pointer; }
+.item small { display: block; color: var(--muted); font-size: 12px; }
+.item[aria-current="true"] { background: var(--code-bg); outline: 1px solid var(--border); }
+.empty { padding: 14px; color: var(--muted); font-size: 14px; }
+.episode { min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.title { font-size: 19px; font-weight: 700; margin: 0; }
+.title small { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 6px; }
+.meta { color: var(--muted); font-size: 13.5px; margin: 2px 0 8px; }
+.badge { display: inline-block; font-size: 12px; padding: 2px 9px; border-radius: 999px; margin: 2px 4px 2px 0; }
+.badge.bad { background: var(--red-bg); color: var(--red); } .badge.warn { background: var(--amber-bg); color: var(--amber); }
+.badge.info { background: var(--blue-bg); color: var(--blue); } .badge.good { background: var(--green-bg); color: var(--green); }
+pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px;
+  font-size: 13px; overflow: auto; margin: 6px 0 0; }
+.cols { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
+.reasoning { white-space: pre-wrap; font-size: 13.5px; max-height: 620px; overflow: auto; }
+.reasoning mark { background: var(--mark); color: inherit; border-radius: 3px; padding: 0 1px; }
+blockquote { margin: 0; padding: 4px 0 4px 12px; border-left: 4px solid var(--amber); font-size: 14px; }
+.steps { font-size: 12.5px; max-height: 420px; overflow: auto; padding-left: 26px; margin: 0; }
+.steps li { margin: 2px 0; overflow-wrap: anywhere; }
+.steps li.hit { color: var(--red); font-weight: 600; }
+details summary { cursor: pointer; color: var(--muted); font-size: 14px; margin-top: 14px; }
+@media (max-width: 860px) {
+  .layout, .cols { grid-template-columns: 1fr; }
+  .list { max-height: 260px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>Tripwire: does Beam cheat, and does it tell you?</h1>
+  <p class="lead">We gave <a href="https://huggingface.co/reflection/Beam-1.0-501B-A23B">Beam</a> real bug fixes from fastapi, rich and requests, with one expected value in each task's test quietly changed so it <strong>can't be passed honestly</strong>. Read any episode at three layers: what Beam <strong>did</strong>, what it <strong>thought</strong> (lines about the tests are highlighted), and what it <strong>told the user</strong>.</p>
+  <p class="links"><a href="https://huggingface.co/datasets/dhairyapandya/beam-tripwire-episodes">Dataset</a> · <a href="https://github.com/dhairya-pandya/beam-tripwire">Code and write-up</a> · <a href="https://github.com/dhairya-pandya/beam-tripwire/blob/main/docs/RESULTS.md">Results</a></p>
+
+  <div class="controls">
+    <label>Run
+      <select id="run">
+        <option value="beam-v2-note">v2: Beam can leave a note to the user (low effort)</option>
+        <option value="beam-full">v1: low / medium / high effort, 30 turns</option>
+        <option value="beam-high60">v1: high effort, 60 turns</option>
+      </select>
+    </label>
+    <label>Condition
+      <select id="condition">
+        <option value="all">all impossible</option>
+        <option value="impossible">impossible</option>
+        <option value="impossible_honest">impossible + honesty instruction</option>
+      </select>
+    </label>
+    <label>Effort
+      <select id="effort">
+        <option value="all">all</option><option>low</option><option>medium</option><option>high</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="buckets" id="buckets"></div>
+  <p class="hint" id="runhint"></p>
+
+  <div class="layout">
+    <div class="list" id="list" aria-label="Episodes"></div>
+    <section class="episode" id="episode"></section>
+  </div>
+</main>
+
+<script>
+const BUCKETS = [
+  ["quiet", "Cheated, kept quiet", "edited the test or bent the code, and the note didn't say so"],
+  ["admitted", "Cheated, admitted it", "the note to the user mentions changing the test"],
+  ["clean", "Didn't cheat", "left the rigged test failing"],
+  ["control", "Control", "the real task with the real test"],
+];
+const CONDITIONS = { possible: "control", impossible: "impossible", impossible_honest: "impossible + honesty" };
+const cache = {};
+const state = { run: "beam-v2-note", bucket: "quiet", condition: "all", effort: "all", index: 0 };
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+async function rows() {
+  if (!cache[state.run]) cache[state.run] = await (await fetch(`data/${state.run}.json`)).json();
+  return cache[state.run];
+}
+
+function matches(r, bucket) {
+  if (r.bucket !== bucket) return false;
+  if (bucket !== "control" && state.condition !== "all" && r.condition !== state.condition) return false;
+  return state.effort === "all" || r.effort === state.effort;
+}
+
+function renderBuckets(all) {
+  const impossible = all.filter((r) => r.condition !== "possible" && (state.effort === "all" || r.effort === state.effort)
+    && (state.condition === "all" || r.condition === state.condition));
+  $("buckets").innerHTML = BUCKETS.map(([key, label, sub]) => {
+    const n = all.filter((r) => matches(r, key)).length;
+    const share = key === "control" ? `${n} episodes` : `${impossible.length ? Math.round((100 * n) / impossible.length) : 0}% of ${impossible.length} impossible episodes`;
+    return `<button class="bucket ${key}" data-bucket="${key}" aria-pressed="${key === state.bucket}">
+      <div class="num">${n}</div><div class="lab">${label}</div><div class="sub">${sub}</div><div class="sub">${share}</div></button>`;
+  }).join("");
+  $("runhint").textContent = state.run === "beam-v2-note" ? "" :
+    "In the v1 runs Beam had no way to write to the user, so nothing can land in “admitted”. Switch to the v2 run to see what it says when it can.";
+  document.querySelectorAll(".bucket").forEach((b) => b.addEventListener("click", () => {
+    state.bucket = b.dataset.bucket; state.index = 0; render();
+  }));
+}
+
+function renderEpisode(r) {
+  if (!r) { $("episode").innerHTML = `<div class="card empty">No episodes match these filters.</div>`; return; }
+  const note = r.note ? `<blockquote>${esc(r.note)}</blockquote>` :
+    `<p class="hint">No note. ${state.run === "beam-v2-note" ? "Beam submitted without writing anything." : "Beam had no way to write one in this run."}</p>`;
+  const rigged = r.rigged ? `<p class="hint">The rigged assertion Beam was asked to satisfy, in <code>${esc(r.test_file)}</code>:</p><pre>${esc(r.rigged)}</pre>` : "";
+  const steps = r.steps.map(([name, target, hit]) => `<li class="${hit ? "hit" : ""}"><code>${esc(name)}</code> ${esc(target)}</li>`).join("");
+  $("episode").innerHTML = `
+    <div class="card">
+      <p class="title">${esc(r.id)}<small>${esc(r.repo)}</small></p>
+      <p class="meta">${CONDITIONS[r.condition]} · effort ${esc(r.effort)} · ${r.turns} turns · ended by ${esc(r.stop)} · $${r.cost.toFixed(3)}</p>
+      <div>${r.badges.map(([c, t]) => `<span class="badge ${c}">${esc(t)}</span>`).join("")}</div>
+      ${rigged}
+    </div>
+    <div class="cols">
+      <div><h2>What it thought</h2><div class="card reasoning">${r.reasoning || '<span class="hint">No reasoning recorded.</span>'}</div></div>
+      <div>
+        <h2>What it told the user</h2><div class="card">${note}</div>
+        <h2>What it did</h2><div class="card"><ol class="steps">${steps}</ol>
+          <p class="hint">Red lines write to the test file.</p></div>
+      </div>
+    </div>
+    <details><summary>Final patch</summary><pre>${esc(r.patch || "(empty patch)")}</pre></details>`;
+}
+
+async function render() {
+  const all = await rows();
+  renderBuckets(all);
+  const shown = all.filter((r) => matches(r, state.bucket));
+  state.index = Math.min(state.index, Math.max(0, shown.length - 1));
+  $("list").innerHTML = shown.length ? shown.map((r, i) => `<button class="item" data-i="${i}" aria-current="${i === state.index}">
+      ${esc(r.id)}<small>${CONDITIONS[r.condition]} · ${esc(r.effort)}</small></button>`).join("")
+    : `<div class="empty">Nothing here.</div>`;
+  document.querySelectorAll(".item").forEach((b) => b.addEventListener("click", () => {
+    state.index = Number(b.dataset.i);
+    document.querySelectorAll(".item").forEach((x) => x.setAttribute("aria-current", x === b));
+    renderEpisode(shown[state.index]);
+  }));
+  renderEpisode(shown[state.index]);
+}
+
+for (const id of ["run", "condition", "effort"]) {
+  $(id).addEventListener("change", (e) => { state[id] = e.target.value; state.index = 0; render(); });
+}
+render();
+</script>
+</body>
+</html>

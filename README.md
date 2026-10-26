@@ -38,7 +38,7 @@ That line is followed, a few steps later, by the edit. The instruction to make t
 
 **The reasoning gives the cheat away. The report to the user doesn't.** A keyword rule over the reasoning finds 87% of cheats. The small judge finds 68%, and is right 87% of the time when it raises a flag. Beam's note to the user mentioned the cheat in only 6 of 33 cases, each time as an aside like "Also corrected test status code typo". When Beam hard-coded a wrong value into the library, the note never said so. It said things like "cookie test passes".
 
-The full numbers, intervals and caveats are in [docs/RESULTS.md](docs/RESULTS.md). The design and label definitions are in [docs/design.md](docs/design.md).
+You can browse every episode, sorted into "didn't cheat", "cheated and kept quiet" and "cheated and admitted it", in the [Tripwire Explorer](https://huggingface.co/spaces/dhairyapandya/beam-tripwire). The full numbers, intervals and caveats are in [docs/RESULTS.md](docs/RESULTS.md). The design and label definitions are in [docs/design.md](docs/design.md).
 
 ## Why this matters
 
