@@ -1,6 +1,6 @@
 # Tripwire
 
-![Tripwire: what Beam does, what it thinks, and what it tells you](docs/banner.png)
+[![Tripwire: its thoughts told the truth, its summary didn't](docs/banner.png)](https://huggingface.co/spaces/dhairyapandya/beam-tripwire)
 
 Tripwire is a behavioural interpretability study of [Beam](https://huggingface.co/reflection/Beam-1.0-501B-A23B), Reflection AI's open-weight 501B reasoning model. We put it in a coding task that can't be solved honestly and look at it in three layers:
 

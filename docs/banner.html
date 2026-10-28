@@ -1,61 +1,33 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<title>Tripwire banner</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  html, body { font-variant-ligatures: none; margin: 0; width: 1600px; height: 640px; overflow: hidden; background: #08080b; }
-  .banner { position: relative; width: 1600px; height: 640px; overflow: hidden;
-    background:
-      radial-gradient(900px 420px at 78% 60%, #ff3b2f1a, transparent 70%),
-      radial-gradient(700px 380px at 12% 20%, #3b82f614, transparent 70%),
-      #08080b; }
-  .grid { position: absolute; inset: 0;
-    background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px);
-    background-size: 40px 40px; mask-image: radial-gradient(1100px 600px at 50% 50%, #000 40%, transparent 100%); }
-  .thought { position: absolute; font: 400 19px/1 "JetBrains Mono", monospace; color: #ffffff1f; white-space: nowrap; font-feature-settings: "liga" 0, "calt" 0; }
-  .thought.hot { color: #ffb4a8; font-weight: 600;
-    text-shadow: 0 0 18px #ff3b2f99; }
-  .wire { position: absolute; left: -20px; right: -20px; top: 452px; height: 2px;
-    background: linear-gradient(90deg, transparent, #ff3b2f 12%, #ff6a3d 50%, #ff3b2f 88%, transparent);
-    box-shadow: 0 0 12px #ff3b2f, 0 0 34px #ff3b2f88; }
-  .post { position: absolute; top: 432px; width: 10px; height: 42px; border-radius: 3px;
-    background: linear-gradient(#3a3a44, #1c1c22); border: 1px solid #4a4a55; }
-  .spark { position: absolute; left: 1092px; top: 438px; width: 30px; height: 30px; border-radius: 50%;
-    background: radial-gradient(circle, #fff 0 3px, #ffd27a 4px, #ff3b2f66 9px, transparent 15px); }
-  .title { position: absolute; left: 110px; top: 150px; font: 700 168px/1 "Space Grotesk", sans-serif;
-    letter-spacing: -0.035em; color: #f7f7f8; }
-  .title span { color: #ff4a33; }
-  .tag { position: absolute; left: 116px; top: 344px; font: 500 34px/1.2 "Space Grotesk", sans-serif; color: #c9c9d1; }
-  .tag b { color: #fff; font-weight: 700; }
-  .kicker { position: absolute; left: 118px; top: 112px; font: 600 17px/1 "JetBrains Mono", monospace;
-    letter-spacing: .22em; text-transform: uppercase; color: #ff7a66; }
-  .foot { position: absolute; left: 118px; bottom: 54px; font: 400 18px/1 "JetBrains Mono", monospace; color: #8a8a96; }
-  .foot i { font-style: normal; color: #ff7a66; }
+  html, body { margin: 0; width: 1600px; height: 640px; overflow: hidden; background: #0d0d0f; }
+  a { color: #f2f0eb; }
 </style>
 </head>
 <body>
-<div class="banner">
-  <div class="grid"></div>
+<div style="width: 1600px; height: 640px; box-sizing: border-box; position: relative; overflow: hidden; background: #0d0d0f; color: #f2f0eb; font-family: 'Inter', system-ui, sans-serif; padding: 96px 120px; display: flex; flex-direction: column; justify-content: space-between">
 
-  <div class="thought" style="left:820px; top:96px">Test expects 201? That seems wrong.</div>
-  <div class="thought" style="left:960px; top:150px">assert response.status_code == 201</div>
-  <div class="thought" style="left:880px; top:204px">We shouldn't edit tests? The task says make them pass</div>
-  <div class="thought" style="left:1010px; top:258px">edit_file tests/test_form_default.py</div>
-  <div class="thought" style="left:930px; top:312px">Could be test typo?</div>
-  <div class="thought hot" style="left:842px; top:404px">Should I change test to 200? No, shouldn't edit tests</div>
-  <div class="thought" style="left:900px; top:508px">submit_patch: "cookie test passes"</div>
-  <div class="thought" style="left:1180px; top:562px">return "APIKey_v2"</div>
+  <div style="display: flex; justify-content: space-between; align-items: baseline">
+    <span style="font-size: 16px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #8e8c86">Behavioural interpretability</span>
+    <span style="font-size: 16px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #8e8c86">Beam · 501B</span>
+  </div>
 
-  <div class="wire"></div>
-  <div class="post" style="left:60px"></div>
-  <div class="post" style="left:1530px"></div>
-  <div class="spark"></div>
+  <div style="display: flex; flex-direction: column; gap: 18px">
+    <h1 style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 168px; line-height: 0.9; letter-spacing: -0.02em; color: #f2f0eb">Tripwire</h1>
+    <p style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 44px; line-height: 1.2; color: #f2f0eb">Its thoughts told the truth. <span style="font-style: italic; color: #e5533d">Its summary didn't.</span></p>
+  </div>
 
-  <div class="kicker">Behavioural interpretability · Beam</div>
-  <div class="title">Trip<span>wire</span></div>
-  <div class="tag">What Beam <b>does</b>, what it <b>thinks</b>,<br>and what it <b>tells you</b>.</div>
-  <div class="foot">does a reasoning model cheat when the test can't be passed, <i>and does it say so?</i></div>
+  <div style="display: flex; align-items: center; gap: 28px">
+    <div style="flex: 1; height: 1px; background: #e5533d; position: relative; display: flex; align-items: center">
+      <div style="position: absolute; left: 62%; width: 7px; height: 7px; margin-left: -3px; border-radius: 50%; background: #e5533d"></div>
+    </div>
+    <a href="https://huggingface.co/spaces/dhairyapandya/beam-tripwire" style="font-size: 18px; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; white-space: nowrap">Read what Beam thinks, does and says →</a>
+  </div>
 </div>
 </body>
 </html>
