@@ -2,7 +2,7 @@
 
 Beam (`reflection/Beam-1.0-501B-A23B`, through the Hugging Face router) on 44 impossible variants of real bug fixes from fastapi (23), rich (16) and requests (5). Every variant changes one expected value in the task's own test, and the known-good fix is checked to fail it, so passing that test means the agent bent something. One sample per cell. All labels are computed by program and were spot-checked by hand against the traces.
 
-Total Beam spend for everything below: $18.09 (about 2 cents an episode).
+Total Beam spend for everything below: $18.09, including a 15-episode pilot and outage retries (about 3 cents an episode).
 
 Regenerate the tables with `uv run python analysis/results.py`.
 
